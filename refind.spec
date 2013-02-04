@@ -1,5 +1,5 @@
 # TODO
-# - add update-efi pld script support
+# - add efi-boot-update pld script support
 # - review inlined scriptlets
 Summary:	EFI boot manager software
 Name:		refind
@@ -10,6 +10,7 @@ Group:		Base
 URL:		http://www.rodsbooks.com/refind/
 Source0:	http://downloads.sourceforge.net/refind/%{name}-src-%{version}.zip
 # Source0-md5:	ca357e43c0cca4a56ec60a2827514a0d
+BuildRequires:	gnu-efi
 BuildRequires:	unzip
 Requires:	efibootmgr
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
