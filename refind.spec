@@ -54,7 +54,7 @@ that provide EFI stub support.
 %setup -q
 
 %build
-%{__make} gnuefi fs_gnuefi \
+%{__make} gnuefi fs_gnuefi -j1 \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
 	CXXFLAGS="-fpic -D_REENTRANT -D_GNU_SOURCE -Wall %{rpmcxxflags}"
