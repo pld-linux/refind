@@ -77,11 +77,6 @@ install -p refind.conf-sample $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/%{na
 cp -a icons $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/%{name}
 install -p install.sh $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}
 
-# Copy documentation to %{_docdir}/%{name}-%{version}
-install -d $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
-cp -a docs/* $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
-install -Dp NEWS.txt COPYING.txt LICENSE.txt README.txt CREDITS.txt $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
-
 # Copy keys to %{_sysconfdir}/refind.d/keys
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/refind.d/keys
 cp -a keys/* $RPM_BUILD_ROOT%{_sysconfdir}/refind.d/keys
@@ -98,6 +93,7 @@ cp -a fonts $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%if 0
 %post
 PATH=$PATH:%{_prefix}/local/bin
 # Remove any existing NVRAM entry for rEFInd, to avoid creating a duplicate.
@@ -135,10 +131,11 @@ fi
 # CAUTION: Don't create a %preun or a %postun script that deletes the files
 # installed by install.sh, since that script will run after an update, thus
 # wiping out the just-updated files.
+%endif
 
 %files
 %defattr(644,root,root,755)
-%doc %{_docdir}/%{name}-%{version}
+%doc NEWS.txt LICENSE.txt README.txt CREDITS.txt docs/*
 %dir %{_sysconfdir}/refind.d
 %dir %{_sysconfdir}/refind.d/keys
 %{_sysconfdir}/refind.d/keys/*
