@@ -1,34 +1,27 @@
 # TODO
 # - add efi-boot-update pld script support
 # - review inlined scriptlets
+# - note: invoking efibootmgr can cause firmware corruption on some mactel firmware
+#   http://www.rodsbooks.com/refind/installing.html, but then you probably won't install this tool there
 Summary:	EFI boot manager software
 Name:		refind
-Version:	0.6.6
+Version:	0.6.7
 Release:	0.1
 License:	GPL v3
 Group:		Base
 URL:		http://www.rodsbooks.com/refind/
-Source0:	http://downloads.sourceforge.net/refind/%{name}-src-%{version}.zip
-# Source0-md5:	ca357e43c0cca4a56ec60a2827514a0d
+Source0:	https://downloads.sourceforge.net/project/refind/%{version}/%{name}-src-%{version}.zip
+# Source0-md5:	f118fd9fbc88f47b804746fbcbfb22e6
 BuildRequires:	gnu-efi
 BuildRequires:	unzip
 Requires:	efibootmgr
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define efiarch unknown
-%ifarch i386
+%ifarch %{ix86}
 %define efiarch ia32
 %endif
-%ifarch i486
-%define efiarch ia32
-%endif
-%ifarch i586
-%define efiarch ia32
-%endif
-%ifarch i686
-%define efiarch ia32
-%endif
-%ifarch x86_64
+%ifarch %{x8664}
 %define efiarch x64
 %endif
 
@@ -61,42 +54,42 @@ that provide EFI stub support.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/refind
+install -d $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/%{name}
 
 # Copy the rEFInd binaries (rEFInd proper and drivers) to %{_datadir}/%{name}-%{version},
 # including signing the binaries if sbsign is installed and a %{keydir}/refind.key file
 # is available
 SBSign=$(which sbsign 2> /dev/null || :)
 if [ -f %{keydir}/refind.key -a -x $SBSign ] ; then
-	$SBSign --key %{keydir}/refind.key --cert %{keydir}/refind.crt --output $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/refind/refind_%{efiarch}.efi refind/refind_%{efiarch}.efi
-	install -d $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/refind/drivers_%{efiarch}
+	$SBSign --key %{keydir}/refind.key --cert %{keydir}/refind.crt --output $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/%{name}/refind_%{efiarch}.efi refind/refind_%{efiarch}.efi
+	install -d $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/%{name}/drivers_%{efiarch}
 	for File in $(ls drivers_%{efiarch}/*_x64.efi); do
-		$SBSign --key %{keydir}/refind.key --cert %{keydir}/refind.crt --output $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/refind/$File $File
+		$SBSign --key %{keydir}/refind.key --cert %{keydir}/refind.crt --output $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/%{name}/$File $File
 	done
 else
-	install -Dp refind/refind*.efi $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/refind
-	install -d $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/refind/drivers_%{efiarch}
-	cp -a drivers_%{efiarch}/* $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/refind/drivers_%{efiarch}
+	install -Dp refind/refind*.efi $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/%{name}
+	install -d $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/%{name}/drivers_%{efiarch}
+	cp -a drivers_%{efiarch}/* $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/%{name}/drivers_%{efiarch}
 fi
 
 # Copy configuration and support files to %{_datadir}/%{name}-%{version}
-install -Dp refind.conf-sample $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/refind/
-cp -a icons $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/refind/
-install -Dp install.sh $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/
+install -p refind.conf-sample $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/%{name}
+cp -a icons $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/%{name}
+install -p install.sh $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}
 
-# Copy documentation to %{_docdir}/refind-%{version}
-install -d $RPM_BUILD_ROOT%{_docdir}/refind-%{version}
-cp -a docs/* $RPM_BUILD_ROOT%{_docdir}/refind-%{version}/
-install -Dp NEWS.txt COPYING.txt LICENSE.txt README.txt CREDITS.txt $RPM_BUILD_ROOT%{_docdir}/refind-%{version}
+# Copy documentation to %{_docdir}/%{name}-%{version}
+install -d $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+cp -a docs/* $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+install -Dp NEWS.txt COPYING.txt LICENSE.txt README.txt CREDITS.txt $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
 
 # Copy keys to %{_sysconfdir}/refind.d/keys
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/refind.d/keys
-install -Dp keys/* $RPM_BUILD_ROOT%{_sysconfdir}/refind.d/keys
+cp -a keys/* $RPM_BUILD_ROOT%{_sysconfdir}/refind.d/keys
 
 # Copy scripts to %{_sbindir}
 install -d $RPM_BUILD_ROOT%{_sbindir}
-install -Dp mkrlconf.sh $RPM_BUILD_ROOT%{_sbindir}/
-install -Dp mvrefind.sh $RPM_BUILD_ROOT%{_sbindir}/
+install -p mkrlconf.sh $RPM_BUILD_ROOT%{_sbindir}
+install -p mvrefind.sh $RPM_BUILD_ROOT%{_sbindir}
 
 # Copy banners and fonts to %{_datadir}/%{name}-%{version}
 cp -a banners $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}
@@ -145,10 +138,10 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc %{_docdir}/refind-%{version}
-%attr(755,root,root) %{_sbindir}/mkrlconf.sh
-%attr(755,root,root) %{_sbindir}/mvrefind.sh
-%{_datadir}/%{name}-%{version}
+%doc %{_docdir}/%{name}-%{version}
 %dir %{_sysconfdir}/refind.d
 %dir %{_sysconfdir}/refind.d/keys
 %{_sysconfdir}/refind.d/keys/*
+%attr(755,root,root) %{_sbindir}/mkrlconf.sh
+%attr(755,root,root) %{_sbindir}/mvrefind.sh
+%{_datadir}/%{name}-%{version}
