@@ -4,6 +4,7 @@
 # - note: invoking efibootmgr can cause firmware corruption on some mactel firmware
 #   http://www.rodsbooks.com/refind/installing.html, but then you probably won't install this tool there
 Summary:	EFI boot manager software
+Summary(pl.UTF-8):	Boot manager dla platform EFI
 Name:		refind
 Version:	0.6.7
 Release:	0.1
@@ -27,14 +28,14 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # Directory in which refind.key and refind.crt files are found for
 # signing of binaries. If absent, binaries are copied unsigned.
-%define keydir /mnt/refind
+%define		keydir	/mnt/refind
 
 %description
 A graphical boot manager for EFI- and UEFI-based computers, such as
 all Intel-based Macs and recent (most 2011 and later) PCs. rEFInd
 presents a boot menu showing all the EFI boot loaders on the
 EFI-accessible partitions, and optionally BIOS-bootable partitions on
-Macs. EFI-compatbile OSes, including Linux, provide boot loaders that
+Macs. EFI-compatible OSes, including Linux, provide boot loaders that
 rEFInd can detect and launch. rEFInd can launch Linux EFI boot loaders
 such as ELILO, GRUB Legacy, GRUB 2, and 3.3.0 and later kernels with
 EFI stub support. EFI filesystem drivers for ext2/3/4fs, ReiserFS,
@@ -43,6 +44,22 @@ filesystems, too. rEFInd's ability to detect boot loaders at runtime
 makes it very easy to use, particularly when paired with Linux kernels
 that provide EFI stub support.
 
+%description -l pl.UTF-8
+Graficzny boot manager dla komputerów opartych na EFI i UEFI, takich
+jak wszystkie komputery Mac z procesorem Intela oraz nowsze PC
+(większość wyprodukowanych od 2011 roku). rEFInd prezentuje menu
+startowe pokazujące boot loadery EFI na partycjach dostępnych dla EFI
+oraz opcjonalnie opartycje startowe BIOS-u na Makach. Systemy
+operacyjne zgodne z EFI, w tym Linux, udostępniają boot loadery, które
+rEFInd jest w stanie wykryć i uruchomić. rEFInd potrafi uruchomić
+takie programy, jak ELILO, GRUB Legacy, GRUB 2 oraz jądra Linuksa w
+wersji 3.3.0 lub nowszej z obsługą zaślepki EFI. Sterowniki EFI do
+systemów plików ext2/3/4, ReiserFS, HFS+ oraz ISO-9660 umożliwiają
+rEFIndowi uruchamianie programów także z tych systmów plików. rEFInd
+potrafi wykrywać boot loadery w czasie działania, dzięki czemu jest
+łatwy w użyciu, w szczególności w połączeniu z jądrami Linuksa z
+obsługą zaślepki EFI.
+
 %prep
 %setup -q
 
@@ -50,7 +67,10 @@ that provide EFI stub support.
 %{__make} gnuefi fs_gnuefi -j1 \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
-	CXXFLAGS="-fpic -D_REENTRANT -D_GNU_SOURCE -Wall %{rpmcxxflags}"
+	CXXFLAGS="-fpic -D_REENTRANT -D_GNU_SOURCE -Wall %{rpmcxxflags}" \
+	GNUEFILIB=%{_libdir} \
+	EFILIB=%{_libdir} \
+	EFICRT0=%{_libdir}
 
 %install
 rm -rf $RPM_BUILD_ROOT
