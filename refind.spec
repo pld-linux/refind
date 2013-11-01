@@ -6,13 +6,13 @@
 Summary:	EFI boot manager software
 Summary(pl.UTF-8):	Boot manager dla platform EFI
 Name:		refind
-Version:	0.6.7
+Version:	0.7.4
 Release:	0.1
 License:	GPL v3
 Group:		Base
 URL:		http://www.rodsbooks.com/refind/
 Source0:	https://downloads.sourceforge.net/project/refind/%{version}/%{name}-src-%{version}.zip
-# Source0-md5:	f118fd9fbc88f47b804746fbcbfb22e6
+# Source0-md5:	69caa08a1cafe61292ecd8e7199481c6
 BuildRequires:	gnu-efi
 BuildRequires:	unzip
 Requires:	efibootmgr
