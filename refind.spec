@@ -6,24 +6,24 @@
 Summary:	EFI boot manager software
 Summary(pl.UTF-8):	Boot manager dla platform EFI
 Name:		refind
-Version:	0.7.4
+Version:	0.8.3
 Release:	0.1
 License:	GPL v3
 Group:		Base
-URL:		http://www.rodsbooks.com/refind/
 Source0:	https://downloads.sourceforge.net/project/refind/%{version}/%{name}-src-%{version}.zip
-# Source0-md5:	69caa08a1cafe61292ecd8e7199481c6
+# Source0-md5:	ed0a6048e135e7140ee37540819454fa
+URL:		http://www.rodsbooks.com/refind/
 BuildRequires:	gnu-efi
 BuildRequires:	unzip
 Requires:	efibootmgr
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define efiarch unknown
+%define		efiarch unknown
 %ifarch %{ix86}
-%define efiarch ia32
+%define		efiarch ia32
 %endif
 %ifarch %{x8664}
-%define efiarch x64
+%define		efiarch x64
 %endif
 
 # Directory in which refind.key and refind.crt files are found for
