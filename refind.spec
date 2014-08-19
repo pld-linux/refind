@@ -10,7 +10,7 @@ Version:	0.8.3
 Release:	0.1
 License:	GPL v3
 Group:		Base
-Source0:	https://downloads.sourceforge.net/project/refind/%{version}/%{name}-src-%{version}.zip
+Source0:	http://downloads.sourceforge.net/refind/%{name}-src-%{version}.zip
 # Source0-md5:	ed0a6048e135e7140ee37540819454fa
 URL:		http://www.rodsbooks.com/refind/
 BuildRequires:	gnu-efi
